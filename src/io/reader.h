@@ -211,61 +211,6 @@ namespace io
             return string;
         }
 
-        //TEMPORARY FUNCTION
-        /**
-         * Look up and retrieve a localised string from strings file using an index.
-         * @brief lookupString Look up and retrieve a localised string.
-         * @param filename Name of streamed file.
-         * @param index String ID.
-         * @param recordType Type code of record requesting lookup.
-         * @param subrecord Type code of subrecord requesting lookup.
-         * @return String.
-         */
-        QString lookupString(QString filename, quint32 index, quint32 recordType, quint32 subrecord)
-        {
-            //Get the filename without extensions (Update.esm->Update)
-            QString temp = filename;
-            QString file;
-            int lastindex = temp.lastIndexOf(".");
-            file = temp.left(lastindex);
-
-            //Get the type of string table
-            QString extension;
-            if((recordType != 'LSCR' && subrecord == 'DESC') || 
-               (recordType == 'QUST' && subrecord == 'CNAM') || 
-               (recordType == 'BOOK' && subrecord == 'CNAM')) {
-                extension = ".DLSTRINGS";
-            } else if(recordType == 'INFO' && subrecord != 'RNAM') {
-                extension = ".ILSTRINGS";
-            } else {
-                extension = ".STRINGS";
-            }
-
-            //Get the language from the ini file
-            QString documents = QString("%1/My Games/Skyrim/Skyrim.ini")
-                    .arg(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-            qDebug() << "Documents folder is " << documents;
-            QSettings ini(documents, QSettings::IniFormat);
-
-            QString language = ini.value("sLanguage", "English").toString();
-            language = language.toLower().replace(0,1,language.at(0).toUpper());
-            qDebug() << "Language is " << language;
-
-            //Get the strings directory
-            QDir dir = QCoreApplication::applicationDirPath().append("/");
-            dir.cd("./Data/Strings/");
-            QFile table = dir.path().append("/").append(file).append("_").
-                    append(language).append(extension);
-            qDebug() << "Table is " << table.fileName();
-
-            if(!table.exists()) {
-                return "Error: File not found!";
-            }
-            qDebug() << "String table lookup file found is " << table.fileName();
-
-            return "TODO";
-        }
-
     private:
         /**
          * Pointer to the file stream.

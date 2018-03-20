@@ -69,6 +69,9 @@ set(IO_SRC
     io/parser.h
 
     io/reader.h
+
+    io/lstrings.cpp
+    io/lstrings.h
 )
 
 # QT models.
