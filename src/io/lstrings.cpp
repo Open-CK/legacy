@@ -42,13 +42,35 @@ namespace io
         QString file = trimFileName(filename);
         QString ext = getExtension(recordType, subrecord);
         QString lang = getLanguage();
-        QFile strTable = getStrTable(file, lang, ext);
+        QFile strTable(QString("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Skyrim\\Data\\Strings")
+                .append("/").append(file).append("_").append(lang).append(ext));
 
         if(!strTable.exists()) {
             return "Error: File not found!";
         }
 
-        return "TODO";
+        if(!strTable.open(QIODevice::ReadOnly)) {
+            return "Error: Could not open file!";
+        }
+
+        if (ext.compare(".STRINGS") != 0) {
+            return "Error: Can only read .STRINGS extention!";
+        }
+
+        QDataStream in;
+        in.setDevice(&strTable);
+        Reader r(&in);
+
+        TableHeader h = r.read<TableHeader>();
+        DirectoryEntry entry = getEntry(index, r);
+        r.seek(entry.offset + sizeof(TableHeader) + (h.count * sizeof(DirectoryEntry)));
+        QString str(r.readZstring());
+
+        if (str.contains("Weapon Recharge")) {
+            auto pause = true;
+        }
+
+        return str;
     }
 
     QString LStringReader::trimFileName(QString filename)
@@ -82,13 +104,14 @@ namespace io
         return language.toLower().replace(0,1,language.at(0).toUpper());
     }
 
-    QFile LStringReader::getStrTable(QString file, QString lang, QString ext)
+    DirectoryEntry LStringReader::getEntry(quint32 index, Reader &r)
     {
-        QDir dir = QDir(QString(getenv("%PROGRAMFILES(X86)%",)));
-        dir.cd("./Data/Strings/");
-        QFile table = dir.path().append("/").append(file).append("_").
-                append(lang).append(ext);
+        DirectoryEntry curr = r.read<DirectoryEntry>();
 
-        return table;
+        while (curr.index != index) {
+            curr = r.read<DirectoryEntry>();
+        }
+
+        return curr;
     }
 }

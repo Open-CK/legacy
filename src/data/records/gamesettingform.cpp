@@ -66,8 +66,8 @@ namespace esx
             //TODO: Implement lstring check
             if (r.isLocalizationEnabled()) {
                 quint32 index = r.read<quint32>();
-                QString lstring = r.lookupString("Skyrim.esm", index,
-                    header.getType(), 'DATA');
+//                QString lstring = r.lookupString("Skyrim.esm", index,
+//                    header.getType(), 'DATA');
             } else {
                 QString zstring = r.readZstring();
             }

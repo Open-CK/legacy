@@ -86,9 +86,12 @@ namespace esx
                 // Full name
                 case 'FULL': {
 
-                    if (r.isLocalizationEnabled()) { // TODO: Handle localized strings properly.
-                        this->setFullName(QString::number(r.read<quint32>(), 16));
-                        read += sizeof(quint32);
+                    if (r.isLocalizationEnabled()) {
+                        // TODO: Handle localized strings properly.
+                        io::LStringReader lsr;
+                        QString str = lsr.lookupString("Skyrim.esm", r.read<quint32>(), header.getType(), h.type);
+                        this->setFullName(str);
+                        read +=sizeof(quint32);
                     } else {
                         this->setFullName(r.readZstring());
                         read += this->getFullName().length();

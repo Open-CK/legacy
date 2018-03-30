@@ -29,11 +29,32 @@
 #ifndef LSTRINGS_H
 #define LSTRINGS_H
 
+#include <QDebug>
 #include <QDataStream>
 #include <QFile>
+#include <QSettings>
+#include <QStandardPaths>
+#include <QDir>
+
+#include "reader.h"
 
 namespace io
 {
+    struct TableHeader
+    {
+        quint32 count;
+        quint32 dataSize;
+    };
+
+    struct DirectoryEntry
+    {
+        quint32 index;
+        quint32 offset;
+    };
+
+    typedef TableHeader TableHeader;
+    typedef DirectoryEntry DirectoryEntry;
+
     class LStringReader
     {
     public:
@@ -43,7 +64,8 @@ namespace io
         QString trimFileName(QString filename);
         QString getExtension(quint32 recordType, quint32 subrecord);
         QString getLanguage();
-        QFile getStrTable(QString file, QString lang, QString ext);
+        QFile *getStrTable(QString file, QString lang, QString ext);
+        DirectoryEntry getEntry(quint32 index, Reader &r);
     };
 }
 

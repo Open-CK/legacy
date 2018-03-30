@@ -59,10 +59,10 @@ namespace esx
                 // Description
                 case 'FULL': {
                     //TODO: Implement lstring check
-                    quint32 index = r.read<quint32>();
-                    QString lstring = r.lookupString("Skyrim.esm", index,
-                        header.getType(), 'DATA');
-                    read += sizeof(quint32);
+                    io::LStringReader lsr;
+                    QString str(lsr.lookupString("Skyrim.esm", r.read<quint32>(), header.getType(), h.type));
+                    this->setDesc(str);
+                    read +=sizeof(quint32);
                     break;
                 }
                 // Texture path

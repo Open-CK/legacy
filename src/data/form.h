@@ -43,6 +43,7 @@ public: \
 #include <QObject>
 
 #include <io/reader.h>
+#include <io/lstrings.h>
 
 namespace esx
 {

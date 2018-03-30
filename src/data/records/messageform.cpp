@@ -59,8 +59,11 @@ namespace esx
                 // Actual text displayed
             case 'DESC':
                 if (r.isLocalizationEnabled()) { // TODO: Handle localized strings properly.
-                    this->setMessageText(QString::number(r.read<quint32>(), 16));
-                    read += sizeof(quint32);
+                    // TODO: Handle localized strings properly.
+                    io::LStringReader lsr;
+                    QString str(lsr.lookupString("Skyrim.esm", r.read<quint32>(), header.getType(), h.type));
+                    this->setMessageText(str);
+                    read +=sizeof(quint32);
                 }
                 else {
                     this->setMessageText(r.readZstring());
@@ -70,8 +73,10 @@ namespace esx
                 // Optional category name
             case 'FULL':
                 if (r.isLocalizationEnabled()) { // TODO: Handle localized strings properly.
-                    this->setTitle(QString::number(r.read<quint32>(), 16));
-                    read += sizeof(quint32);
+                    io::LStringReader lsr;
+                    QString str(lsr.lookupString("Skyrim.esm", r.read<quint32>(), header.getType(), h.type));
+                    this->setTitle(str);
+                    read +=sizeof(quint32);
                 }
                 else {
                     this->setTitle(r.readZstring());
@@ -107,8 +112,10 @@ namespace esx
                 // Response/Activation Text
             case 'ITXT':
                 if (r.isLocalizationEnabled()) { // TODO: Handle localized strings properly.
-                    this->setResponseText(QString::number(r.read<quint32>(), 16));
-                    read += sizeof(quint32);
+                    io::LStringReader lsr;
+                    QString str(lsr.lookupString("Skyrim.esm", r.read<quint32>(), header.getType(), h.type));
+                    this->setResponseText(str);
+                    read +=sizeof(quint32);
                 }
                 else {
                     this->setResponseText(r.readZstring());
